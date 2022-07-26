@@ -1,20 +1,26 @@
 pipeline {
+
     agent any
     tools {
-        maven 'Maven 3.3.9'
-        jdk 'jdk8'
+        maven 'MAVEN'
+        jdk 'JDK'
     }
-    stages {
-        stage('Initialize') {
+    stages{
+        stage ('Initialize') {
             steps {
-                sh ''' echo "PATH = ${PATH}"
-                      echo "M2_HOME = ${M2_HOME}"
-                  '''
+                sh '''
+                        echo "PATH = ${PATH}"
+                        echo "M2_HOME = ${M2_HOME}"
+                    '''
             }
         }
 
-        stage('Build') {
-
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/ZOMELI/API-BS-Exchange-Rate-v1'
+            }
+        }
+        stage ('Build') {
             steps {
                 sh 'mvn -Dmaven.test.failure.ignore=true install'
             }
@@ -25,4 +31,5 @@ pipeline {
             }
         }
     }
+
 }
