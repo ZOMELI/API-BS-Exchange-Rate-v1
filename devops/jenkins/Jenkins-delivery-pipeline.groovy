@@ -1,26 +1,23 @@
 pipeline {
-    agent any
-    tools {
-        maven 'Maven 3.3.9'
-        jdk 'jdk8'
+    agent {
+        docker {
+            image 'maven:3.8.1-adoptopenjdk-11' 
+            args '-v /root/.m2:/root/.m2' 
+        }
     }
     stages {
-        stage ('Initialize') {
+        stage('Build') { 
             steps {
-                sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                '''
+                sh 'mvn -B -DskipTests clean install' 
             }
         }
-
-        stage ('Build') {
+        stage('Test') {
             steps {
-                sh 'mvn -Dmaven.test.failure.ignore=true install' 
+                sh 'mvn test'
             }
             post {
-                success {
-                    junit 'target/surefire-reports/**/*.xml' 
+                always {
+                    junit 'target/surefire-reports/*.xml'
                 }
             }
         }
