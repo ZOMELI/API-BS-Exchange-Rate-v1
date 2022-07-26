@@ -1,7 +1,9 @@
 pipeline {
-    stage("build"){
-            steps{
-                            sh "mvn -f ${PROJECT_ROOT} clean install"
-               }
+    stages{
+        stage("build"){
+                steps{
+                                sh "mvn -f ${PROJECT_ROOT} clean install"
+                   }
+        }
     }
 }
