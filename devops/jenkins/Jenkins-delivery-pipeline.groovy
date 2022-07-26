@@ -1,21 +1,25 @@
 pipeline {
-
+    agent {
+        docker {
+            image 'maven:3.6.3-adoptopenjdk-11' 
+            args '-v /root/.m2:/root/.m2' 
+        }
+    }
     stages {
-   
-        stage('Build') {
+        stage('Build') { 
             steps {
-                dir("/var/lib/jenkins/workspace/demopipelinetask/my-app") {
-                sh 'mvn -B -DskipTests clean package'
+                sh 'mvn -B -DskipTests clean install' 
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
                 }
             }
         }
-     }
-    post {
-       always {
-          junit(
-        allowEmptyResults: true,
-        testResults: '*/test-reports/.xml'
-      )
-      }
-   } 
+    }
 }
