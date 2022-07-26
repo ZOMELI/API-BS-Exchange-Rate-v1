@@ -15,9 +15,10 @@ pipeline {
         }
         
         stage("build"){
-                steps{
-                          sh "mvn clean install"
-                   }
+               git url: 'https://github.com/ZOMELI/API-BS-Exchange-Rate-v1'
+                withMaven {
+                  sh "mvn clean install"
+                } // withMaven will discover the generated Maven artifacts, JUnit Surefire & FailSafe reports and FindBugs reports
         }
     }
 }
